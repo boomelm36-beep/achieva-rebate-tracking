@@ -100,7 +100,7 @@ export default function Home() {
   // ... (keep loading and auth screens the same)
 
   // --- MINIMALIST KANBAN DASHBOARD ---
-  const userRole = session.user.role || "REQUESTER";
+  const userRole = session?.user?.role || "REQUESTER";
 
   // Filter documents into 4 Kanban columns
   const requestDocs = documents.filter(doc => doc.status === "REQUEST");
@@ -117,7 +117,7 @@ export default function Home() {
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rebate Workflow</h1>
             <p className="text-sm text-gray-500 mt-1">
-              {session.user.email} <span className="mx-1 text-gray-300">•</span> <span className="uppercase text-[10px] tracking-widest font-semibold text-gray-400">{userRole}</span>
+              {session?.user?.email} <span className="mx-1 text-gray-300">•</span> <span className="uppercase text-[10px] tracking-widest font-semibold text-gray-400">{userRole}</span>
             </p>
           </div>
           <div className="flex gap-3">
