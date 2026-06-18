@@ -18,28 +18,31 @@ enum DocStatus {
   REQUEST
   CHECKING
   APPROVED
+  PAID // <-- Added new status
 }
 
 model User {
   id        String     @id @default(cuid())
   email     String     @unique
   name      String?
-  password  String? // <-- Added to store encrypted passwords
+  password  String?
   role      Role       @default(REQUESTER)
   documents Document[]
 }
 
 model Document {
-  id           String    @id @default(cuid())
-  subject      String
-  docNumber    String    @unique
-  amount       Float
-  status       DocStatus @default(REQUEST)
-  rejectReason String?
-  fileName     String? // <-- Added to store the file name
-  fileData     String? // <-- Added to store the actual file content
-  createdAt    DateTime  @default(now())
-  deadline     DateTime
-  userId       String
-  user         User      @relation(fields: [userId], references: [id])
+  id            String    @id @default(cuid())
+  subject       String
+  docNumber     String    @unique
+  amount        Float
+  status        DocStatus @default(REQUEST)
+  rejectReason  String?
+  fileName      String?
+  fileData      String?
+  proofFileName String? // <-- Added to store proof name
+  proofFileData String? // <-- Added to store proof file content
+  createdAt     DateTime  @default(now())
+  deadline      DateTime
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
 }

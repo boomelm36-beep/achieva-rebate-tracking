@@ -55,19 +55,33 @@ export async function PATCH(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id, status, rejectReason } = await request.json();
+    const { id, status, rejectReason, proofFileName, proofFileData } = await request.json();
 
+    // Validation: Rejections need a reason
     if (status === "REQUEST" && (!rejectReason || rejectReason.trim() === "")) {
       return NextResponse.json({ error: "A reason is required to reject" }, { status: 400 });
     }
 
+    // Validation: Marking as PAID needs proof of payment
+    if (status === "PAID" && (!proofFileName || !proofFileData)) {
+      return NextResponse.json({ error: "Proof of payment file is required" }, { status: 400 });
+    }
+
+    const dataToUpdate: any = { status: status as DocStatus };
+    
+    // Manage rejection reason clearing
+    if (status === "REQUEST") dataToUpdate.rejectReason = rejectReason;
+    else dataToUpdate.rejectReason = null;
+
+    // Attach proof of payment if moving to PAID
+    if (status === "PAID") {
+      dataToUpdate.proofFileName = proofFileName;
+      dataToUpdate.proofFileData = proofFileData;
+    }
+
     const updatedDocument = await prisma.document.update({
       where: { id },
-      data: {
-        status: status as DocStatus,
-        // If moving to CHECKING or APPROVED, clear out any old rejection reasons!
-        rejectReason: status === "REQUEST" ? rejectReason : null,
-      },
+      data: dataToUpdate,
     });
 
     return NextResponse.json(updatedDocument, { status: 200 });

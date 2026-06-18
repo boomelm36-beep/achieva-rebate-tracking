@@ -39,7 +39,8 @@ export type Role = (typeof Role)[keyof typeof Role]
 export const DocStatus: {
   REQUEST: 'REQUEST',
   CHECKING: 'CHECKING',
-  APPROVED: 'APPROVED'
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
 };
 
 export type DocStatus = (typeof DocStatus)[keyof typeof DocStatus]
@@ -2121,6 +2122,8 @@ export namespace Prisma {
     rejectReason: string | null
     fileName: string | null
     fileData: string | null
+    proofFileName: string | null
+    proofFileData: string | null
     createdAt: Date | null
     deadline: Date | null
     userId: string | null
@@ -2135,6 +2138,8 @@ export namespace Prisma {
     rejectReason: string | null
     fileName: string | null
     fileData: string | null
+    proofFileName: string | null
+    proofFileData: string | null
     createdAt: Date | null
     deadline: Date | null
     userId: string | null
@@ -2149,6 +2154,8 @@ export namespace Prisma {
     rejectReason: number
     fileName: number
     fileData: number
+    proofFileName: number
+    proofFileData: number
     createdAt: number
     deadline: number
     userId: number
@@ -2173,6 +2180,8 @@ export namespace Prisma {
     rejectReason?: true
     fileName?: true
     fileData?: true
+    proofFileName?: true
+    proofFileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2187,6 +2196,8 @@ export namespace Prisma {
     rejectReason?: true
     fileName?: true
     fileData?: true
+    proofFileName?: true
+    proofFileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2201,6 +2212,8 @@ export namespace Prisma {
     rejectReason?: true
     fileName?: true
     fileData?: true
+    proofFileName?: true
+    proofFileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2302,6 +2315,8 @@ export namespace Prisma {
     rejectReason: string | null
     fileName: string | null
     fileData: string | null
+    proofFileName: string | null
+    proofFileData: string | null
     createdAt: Date
     deadline: Date
     userId: string
@@ -2335,6 +2350,8 @@ export namespace Prisma {
     rejectReason?: boolean
     fileName?: boolean
     fileData?: boolean
+    proofFileName?: boolean
+    proofFileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2350,6 +2367,8 @@ export namespace Prisma {
     rejectReason?: boolean
     fileName?: boolean
     fileData?: boolean
+    proofFileName?: boolean
+    proofFileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2365,6 +2384,8 @@ export namespace Prisma {
     rejectReason?: boolean
     fileName?: boolean
     fileData?: boolean
+    proofFileName?: boolean
+    proofFileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2380,12 +2401,14 @@ export namespace Prisma {
     rejectReason?: boolean
     fileName?: boolean
     fileData?: boolean
+    proofFileName?: boolean
+    proofFileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "fileName" | "fileData" | "createdAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "fileName" | "fileData" | "proofFileName" | "proofFileData" | "createdAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2410,6 +2433,8 @@ export namespace Prisma {
       rejectReason: string | null
       fileName: string | null
       fileData: string | null
+      proofFileName: string | null
+      proofFileData: string | null
       createdAt: Date
       deadline: Date
       userId: string
@@ -2845,6 +2870,8 @@ export namespace Prisma {
     readonly rejectReason: FieldRef<"Document", 'String'>
     readonly fileName: FieldRef<"Document", 'String'>
     readonly fileData: FieldRef<"Document", 'String'>
+    readonly proofFileName: FieldRef<"Document", 'String'>
+    readonly proofFileData: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
     readonly deadline: FieldRef<"Document", 'DateTime'>
     readonly userId: FieldRef<"Document", 'String'>
@@ -3301,6 +3328,8 @@ export namespace Prisma {
     rejectReason: 'rejectReason',
     fileName: 'fileName',
     fileData: 'fileData',
+    proofFileName: 'proofFileName',
+    proofFileData: 'proofFileData',
     createdAt: 'createdAt',
     deadline: 'deadline',
     userId: 'userId'
@@ -3492,6 +3521,8 @@ export namespace Prisma {
     rejectReason?: StringNullableFilter<"Document"> | string | null
     fileName?: StringNullableFilter<"Document"> | string | null
     fileData?: StringNullableFilter<"Document"> | string | null
+    proofFileName?: StringNullableFilter<"Document"> | string | null
+    proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -3507,6 +3538,8 @@ export namespace Prisma {
     rejectReason?: SortOrderInput | SortOrder
     fileName?: SortOrderInput | SortOrder
     fileData?: SortOrderInput | SortOrder
+    proofFileName?: SortOrderInput | SortOrder
+    proofFileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3525,6 +3558,8 @@ export namespace Prisma {
     rejectReason?: StringNullableFilter<"Document"> | string | null
     fileName?: StringNullableFilter<"Document"> | string | null
     fileData?: StringNullableFilter<"Document"> | string | null
+    proofFileName?: StringNullableFilter<"Document"> | string | null
+    proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -3540,6 +3575,8 @@ export namespace Prisma {
     rejectReason?: SortOrderInput | SortOrder
     fileName?: SortOrderInput | SortOrder
     fileData?: SortOrderInput | SortOrder
+    proofFileName?: SortOrderInput | SortOrder
+    proofFileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3562,6 +3599,8 @@ export namespace Prisma {
     rejectReason?: StringNullableWithAggregatesFilter<"Document"> | string | null
     fileName?: StringNullableWithAggregatesFilter<"Document"> | string | null
     fileData?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    proofFileName?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    proofFileData?: StringNullableWithAggregatesFilter<"Document"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     deadline?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     userId?: StringWithAggregatesFilter<"Document"> | string
@@ -3636,6 +3675,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     user: UserCreateNestedOneWithoutDocumentsInput
@@ -3650,6 +3691,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     userId: string
@@ -3664,6 +3707,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
@@ -3678,6 +3723,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -3692,6 +3739,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     userId: string
@@ -3706,6 +3755,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3719,6 +3770,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -3889,6 +3942,8 @@ export namespace Prisma {
     rejectReason?: SortOrder
     fileName?: SortOrder
     fileData?: SortOrder
+    proofFileName?: SortOrder
+    proofFileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3907,6 +3962,8 @@ export namespace Prisma {
     rejectReason?: SortOrder
     fileName?: SortOrder
     fileData?: SortOrder
+    proofFileName?: SortOrder
+    proofFileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3921,6 +3978,8 @@ export namespace Prisma {
     rejectReason?: SortOrder
     fileName?: SortOrder
     fileData?: SortOrder
+    proofFileName?: SortOrder
+    proofFileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -4233,6 +4292,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4246,6 +4307,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4288,6 +4351,8 @@ export namespace Prisma {
     rejectReason?: StringNullableFilter<"Document"> | string | null
     fileName?: StringNullableFilter<"Document"> | string | null
     fileData?: StringNullableFilter<"Document"> | string | null
+    proofFileName?: StringNullableFilter<"Document"> | string | null
+    proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -4350,6 +4415,8 @@ export namespace Prisma {
     rejectReason?: string | null
     fileName?: string | null
     fileData?: string | null
+    proofFileName?: string | null
+    proofFileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4363,6 +4430,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4376,6 +4445,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4389,6 +4460,8 @@ export namespace Prisma {
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
     fileName?: NullableStringFieldUpdateOperationsInput | string | null
     fileData?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
