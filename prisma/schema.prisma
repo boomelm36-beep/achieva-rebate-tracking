@@ -1,0 +1,43 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql" // We are configuring this for PostgreSQL
+}
+
+enum Role {
+  REQUESTER
+  APPROVER
+}
+
+enum DocStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  password  String?    // <-- Added to store encrypted passwords
+  role      Role       @default(REQUESTER)
+  documents Document[]
+}
+
+model Document {
+  id           String    @id @default(cuid())
+  subject      String
+  docNumber    String    @unique
+  amount       Float
+  status       DocStatus @default(PENDING)
+  rejectReason String?
+  createdAt    DateTime  @default(now())
+  deadline     DateTime
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+}
