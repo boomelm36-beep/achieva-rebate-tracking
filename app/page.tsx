@@ -7,11 +7,13 @@ import { DocumentCard, RebateDocument } from "@/components/DocumentCard";
 import CreateDocumentModal from "@/components/CreateDocumentModal";
 
 export default function Home() {
+  // Application State
   const { data: session, status } = useSession();
   const [documents, setDocuments] = useState<RebateDocument[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Authentication UI State
   const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +21,7 @@ export default function Home() {
   const [authError, setAuthError] = useState("");
   const [isAuthLoading, setIsAuthLoading] = useState(false);
 
+  // --- DATABASE FETCHING LOGIC ---
   const fetchDocuments = () => {
     setLoadingDocs(true);
     fetch("/api/documents")
@@ -31,9 +34,12 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (session) fetchDocuments();
+    if (session) {
+      fetchDocuments();
+    }
   }, [session]);
 
+  // --- AUTHENTICATION HANDLERS ---
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
@@ -41,19 +47,33 @@ export default function Home() {
 
     try {
       if (!isLoginView) {
+        // Sign Up Flow
         const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password, name }),
         });
         const data = await res.json();
+
         if (!res.ok) throw new Error(data.error || "Failed to register");
 
-        const loginRes = await signIn("credentials", { redirect: false, email, password });
+        // Auto-login after successful registration
+        const loginRes = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
         if (loginRes?.error) throw new Error("Registration successful, but login failed");
       } else {
-        const res = await signIn("credentials", { redirect: false, email, password });
-        if (res?.error) throw new Error("Invalid credentials");
+        // Sign In Flow
+        const res = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (res?.error) throw new Error("Invalid email or password");
       }
     } catch (err: any) {
       setAuthError(err.message);
@@ -62,24 +82,23 @@ export default function Home() {
     }
   };
 
-  const handleApprove = async (id: string) => {
+  // --- DOCUMENT WORKFLOW HANDLER ---
+  const handleUpdateStatus = async (id: string, newStatus: string, reason?: string) => {
+    const payload: any = { id, status: newStatus };
+    if (reason) payload.rejectReason = reason;
+
     const res = await fetch("/api/documents", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: "APPROVED" }),
+      body: JSON.stringify(payload),
     });
-    if (res.ok) fetchDocuments();
+    
+    if (res.ok) {
+      fetchDocuments();
+    }
   };
 
-  const handleReject = async (id: string, reason: string) => {
-    const res = await fetch("/api/documents", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: "REJECTED", rejectReason: reason }),
-    });
-    if (res.ok) fetchDocuments();
-  };
-
+  // --- RENDER: LOADING ---
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-white">
@@ -88,7 +107,7 @@ export default function Home() {
     );
   }
 
-  // --- MINIMALIST AUTH SCREEN ---
+  // --- RENDER: AUTHENTICATION SCREEN ---
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
@@ -100,29 +119,43 @@ export default function Home() {
             </p>
           </div>
 
-          {authError && <div className="mb-6 text-sm text-red-600">{authError}</div>}
+          {authError && (
+            <div className="mb-6 p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-100 text-center">
+              {authError}
+            </div>
+          )}
 
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             {!isLoginView && (
               <input
-                type="text" required value={name} onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border-b border-gray-200 text-sm focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 border-b border-gray-200 text-sm text-gray-900 focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
                 placeholder="Full Name"
               />
             )}
             <input
-              type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border-b border-gray-200 text-sm focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border-b border-gray-200 text-sm text-gray-900 focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
               placeholder="Email address"
             />
             <input
-              type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border-b border-gray-200 text-sm focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border-b border-gray-200 text-sm text-gray-900 focus:outline-none focus:border-gray-900 transition-colors bg-transparent placeholder-gray-400"
               placeholder="Password"
             />
             
             <button
-              type="submit" disabled={isAuthLoading}
+              type="submit"
+              disabled={isAuthLoading}
               className="w-full bg-black text-white text-sm font-medium py-2.5 rounded-md mt-4 transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {isAuthLoading ? "Processing..." : isLoginView ? "Sign In" : "Create Account"}
@@ -132,14 +165,21 @@ export default function Home() {
           <div className="mt-6 flex items-center justify-center space-x-1 text-xs text-gray-500">
             <span>{isLoginView ? "No account?" : "Have an account?"}</span>
             <button
-              onClick={() => { setIsLoginView(!isLoginView); setAuthError(""); }}
+              onClick={() => {
+                setIsLoginView(!isLoginView);
+                setAuthError(""); 
+              }}
               className="text-black font-medium hover:underline"
             >
               {isLoginView ? "Sign up" : "Sign in"}
             </button>
           </div>
 
-          <div className="my-6 border-t border-gray-100"></div>
+          <div className="my-6 flex items-center">
+            <div className="flex-grow border-t border-gray-100"></div>
+            <span className="px-3 text-xs text-gray-400 uppercase">Or</span>
+            <div className="flex-grow border-t border-gray-100"></div>
+          </div>
 
           <button
             onClick={() => signIn("google")}
@@ -158,15 +198,22 @@ export default function Home() {
     );
   }
 
-  // --- MINIMALIST DASHBOARD ---
+  // --- MINIMALIST KANBAN DASHBOARD ---
   const userRole = session.user.role || "REQUESTER";
+
+  // Filter documents into Kanban columns based on workflow status
+  const requestDocs = documents.filter(doc => doc.status === "REQUEST");
+  const checkingDocs = documents.filter(doc => doc.status === "CHECKING");
+  const approvedDocs = documents.filter(doc => doc.status === "APPROVED");
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
+      <div className="max-w-[1400px] mx-auto px-6 py-8">
+        
+        {/* Dashboard Header */}
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-100">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Documents</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rebate Workflow</h1>
             <p className="text-sm text-gray-500 mt-1">
               {session.user.email} <span className="mx-1 text-gray-300">•</span> <span className="uppercase text-[10px] tracking-widest font-semibold text-gray-400">{userRole}</span>
             </p>
@@ -177,7 +224,7 @@ export default function Home() {
                 onClick={() => setIsModalOpen(true)}
                 className="bg-black text-white text-sm font-medium py-2 px-4 rounded-md hover:bg-gray-800 transition-colors"
               >
-                New Document
+                + New Document
               </button>
             )}
             <button
@@ -189,6 +236,7 @@ export default function Home() {
           </div>
         </header>
 
+        {/* Kanban Board Layout */}
         <main>
           {loadingDocs ? (
             <div className="flex space-x-2 text-sm text-gray-400">
@@ -196,18 +244,72 @@ export default function Home() {
               <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce delay-75"></span>
               <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce delay-150"></span>
             </div>
-          ) : documents.length === 0 ? (
-            <div className="text-center py-20 border border-dashed border-gray-200 rounded-xl">
-              <p className="text-gray-500 text-sm">No rebate documents found.</p>
-            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {documents.map((doc) => (
-                <DocumentCard
-                  key={doc.id} doc={doc} userRole={userRole}
-                  onApprove={handleApprove} onReject={handleReject}
-                />
-              ))}
+            <div className="flex flex-col lg:flex-row gap-6 items-start">
+              
+              {/* KANBAN COLUMN 1: REQUEST */}
+              <div className="flex-1 w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">1. Request</h2>
+                  <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {requestDocs.length}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {requestDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No requests currently.</p>}
+                  {requestDocs.map((doc) => (
+                    <DocumentCard 
+                      key={doc.id} 
+                      doc={doc} 
+                      userRole={userRole} 
+                      onUpdateStatus={handleUpdateStatus} 
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* KANBAN COLUMN 2: CHECK DOCUMENT */}
+              <div className="flex-1 w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">2. Check Document</h2>
+                  <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {checkingDocs.length}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {checkingDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No documents in checking phase.</p>}
+                  {checkingDocs.map((doc) => (
+                    <DocumentCard 
+                      key={doc.id} 
+                      doc={doc} 
+                      userRole={userRole} 
+                      onUpdateStatus={handleUpdateStatus} 
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* KANBAN COLUMN 3: APPROVED */}
+              <div className="flex-1 w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">3. Approved</h2>
+                  <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {approvedDocs.length}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {approvedDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No approved documents.</p>}
+                  {approvedDocs.map((doc) => (
+                    <DocumentCard 
+                      key={doc.id} 
+                      doc={doc} 
+                      userRole={userRole} 
+                      onUpdateStatus={handleUpdateStatus} 
+                    />
+                  ))}
+                </div>
+              </div>
+
             </div>
           )}
         </main>

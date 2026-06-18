@@ -135,6 +135,8 @@ exports.Prisma.DocumentScalarFieldEnum = {
   amount: 'amount',
   status: 'status',
   rejectReason: 'rejectReason',
+  fileName: 'fileName',
+  fileData: 'fileData',
   createdAt: 'createdAt',
   deadline: 'deadline',
   userId: 'userId'
@@ -160,9 +162,9 @@ exports.Role = exports.$Enums.Role = {
 };
 
 exports.DocStatus = exports.$Enums.DocStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
+  REQUEST: 'REQUEST',
+  CHECKING: 'CHECKING',
+  APPROVED: 'APPROVED'
 };
 
 exports.Prisma.ModelName = {

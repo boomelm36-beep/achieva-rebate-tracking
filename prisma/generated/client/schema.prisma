@@ -15,9 +15,9 @@ enum Role {
 }
 
 enum DocStatus {
-  PENDING
+  REQUEST
+  CHECKING
   APPROVED
-  REJECTED
 }
 
 model User {
@@ -34,8 +34,10 @@ model Document {
   subject      String
   docNumber    String    @unique
   amount       Float
-  status       DocStatus @default(PENDING)
+  status       DocStatus @default(REQUEST)
   rejectReason String?
+  fileName     String? // <-- Added to store the file name
+  fileData     String? // <-- Added to store the actual file content
   createdAt    DateTime  @default(now())
   deadline     DateTime
   userId       String

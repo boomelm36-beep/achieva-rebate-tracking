@@ -37,9 +37,9 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 
 export const DocStatus: {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED'
+  REQUEST: 'REQUEST',
+  CHECKING: 'CHECKING',
+  APPROVED: 'APPROVED'
 };
 
 export type DocStatus = (typeof DocStatus)[keyof typeof DocStatus]
@@ -2119,6 +2119,8 @@ export namespace Prisma {
     amount: number | null
     status: $Enums.DocStatus | null
     rejectReason: string | null
+    fileName: string | null
+    fileData: string | null
     createdAt: Date | null
     deadline: Date | null
     userId: string | null
@@ -2131,6 +2133,8 @@ export namespace Prisma {
     amount: number | null
     status: $Enums.DocStatus | null
     rejectReason: string | null
+    fileName: string | null
+    fileData: string | null
     createdAt: Date | null
     deadline: Date | null
     userId: string | null
@@ -2143,6 +2147,8 @@ export namespace Prisma {
     amount: number
     status: number
     rejectReason: number
+    fileName: number
+    fileData: number
     createdAt: number
     deadline: number
     userId: number
@@ -2165,6 +2171,8 @@ export namespace Prisma {
     amount?: true
     status?: true
     rejectReason?: true
+    fileName?: true
+    fileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2177,6 +2185,8 @@ export namespace Prisma {
     amount?: true
     status?: true
     rejectReason?: true
+    fileName?: true
+    fileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2189,6 +2199,8 @@ export namespace Prisma {
     amount?: true
     status?: true
     rejectReason?: true
+    fileName?: true
+    fileData?: true
     createdAt?: true
     deadline?: true
     userId?: true
@@ -2288,6 +2300,8 @@ export namespace Prisma {
     amount: number
     status: $Enums.DocStatus
     rejectReason: string | null
+    fileName: string | null
+    fileData: string | null
     createdAt: Date
     deadline: Date
     userId: string
@@ -2319,6 +2333,8 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     rejectReason?: boolean
+    fileName?: boolean
+    fileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2332,6 +2348,8 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     rejectReason?: boolean
+    fileName?: boolean
+    fileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2345,6 +2363,8 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     rejectReason?: boolean
+    fileName?: boolean
+    fileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
@@ -2358,12 +2378,14 @@ export namespace Prisma {
     amount?: boolean
     status?: boolean
     rejectReason?: boolean
+    fileName?: boolean
+    fileData?: boolean
     createdAt?: boolean
     deadline?: boolean
     userId?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "createdAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "fileName" | "fileData" | "createdAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2386,6 +2408,8 @@ export namespace Prisma {
       amount: number
       status: $Enums.DocStatus
       rejectReason: string | null
+      fileName: string | null
+      fileData: string | null
       createdAt: Date
       deadline: Date
       userId: string
@@ -2819,6 +2843,8 @@ export namespace Prisma {
     readonly amount: FieldRef<"Document", 'Float'>
     readonly status: FieldRef<"Document", 'DocStatus'>
     readonly rejectReason: FieldRef<"Document", 'String'>
+    readonly fileName: FieldRef<"Document", 'String'>
+    readonly fileData: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
     readonly deadline: FieldRef<"Document", 'DateTime'>
     readonly userId: FieldRef<"Document", 'String'>
@@ -3273,6 +3299,8 @@ export namespace Prisma {
     amount: 'amount',
     status: 'status',
     rejectReason: 'rejectReason',
+    fileName: 'fileName',
+    fileData: 'fileData',
     createdAt: 'createdAt',
     deadline: 'deadline',
     userId: 'userId'
@@ -3462,6 +3490,8 @@ export namespace Prisma {
     amount?: FloatFilter<"Document"> | number
     status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
     rejectReason?: StringNullableFilter<"Document"> | string | null
+    fileName?: StringNullableFilter<"Document"> | string | null
+    fileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -3475,6 +3505,8 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     rejectReason?: SortOrderInput | SortOrder
+    fileName?: SortOrderInput | SortOrder
+    fileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3491,6 +3523,8 @@ export namespace Prisma {
     amount?: FloatFilter<"Document"> | number
     status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
     rejectReason?: StringNullableFilter<"Document"> | string | null
+    fileName?: StringNullableFilter<"Document"> | string | null
+    fileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -3504,6 +3538,8 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     rejectReason?: SortOrderInput | SortOrder
+    fileName?: SortOrderInput | SortOrder
+    fileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3524,6 +3560,8 @@ export namespace Prisma {
     amount?: FloatWithAggregatesFilter<"Document"> | number
     status?: EnumDocStatusWithAggregatesFilter<"Document"> | $Enums.DocStatus
     rejectReason?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    fileName?: StringNullableWithAggregatesFilter<"Document"> | string | null
+    fileData?: StringNullableWithAggregatesFilter<"Document"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     deadline?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     userId?: StringWithAggregatesFilter<"Document"> | string
@@ -3596,6 +3634,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     user: UserCreateNestedOneWithoutDocumentsInput
@@ -3608,6 +3648,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     userId: string
@@ -3620,6 +3662,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
@@ -3632,6 +3676,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -3644,6 +3690,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
     userId: string
@@ -3656,6 +3704,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3667,6 +3717,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -3835,6 +3887,8 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     rejectReason?: SortOrder
+    fileName?: SortOrder
+    fileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3851,6 +3905,8 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     rejectReason?: SortOrder
+    fileName?: SortOrder
+    fileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -3863,6 +3919,8 @@ export namespace Prisma {
     amount?: SortOrder
     status?: SortOrder
     rejectReason?: SortOrder
+    fileName?: SortOrder
+    fileData?: SortOrder
     createdAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
@@ -4173,6 +4231,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4184,6 +4244,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4224,6 +4286,8 @@ export namespace Prisma {
     amount?: FloatFilter<"Document"> | number
     status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
     rejectReason?: StringNullableFilter<"Document"> | string | null
+    fileName?: StringNullableFilter<"Document"> | string | null
+    fileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
@@ -4284,6 +4348,8 @@ export namespace Prisma {
     amount: number
     status?: $Enums.DocStatus
     rejectReason?: string | null
+    fileName?: string | null
+    fileData?: string | null
     createdAt?: Date | string
     deadline: Date | string
   }
@@ -4295,6 +4361,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4306,6 +4374,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4317,6 +4387,8 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     status?: EnumDocStatusFieldUpdateOperationsInput | $Enums.DocStatus
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
