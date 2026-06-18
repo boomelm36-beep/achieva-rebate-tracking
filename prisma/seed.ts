@@ -9,7 +9,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // 1. Clean out existing records to prevent duplicates during testing
+  // 1. Clean out existing records
   await prisma.document.deleteMany({});
   await prisma.user.deleteMany({});
 
@@ -38,7 +38,8 @@ async function main() {
         subject: "Q1 Global Supply Rebate",
         docNumber: "REB-2026-001",
         amount: 14200.00,
-        status: DocStatus.PENDING,
+        // CHANGED: From PENDING to REQUEST
+        status: DocStatus.REQUEST,
         deadline: new Date("2026-08-01"),
         userId: requester.id,
       },
@@ -46,7 +47,8 @@ async function main() {
         subject: "Marketing MDF Reimbursement",
         docNumber: "REB-2026-002",
         amount: 3500.50,
-        status: DocStatus.PENDING,
+        // CHANGED: From PENDING to REQUEST
+        status: DocStatus.REQUEST,
         deadline: new Date("2026-07-15"),
         userId: requester.id,
       },
