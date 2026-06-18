@@ -28,97 +28,100 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const [isRejecting, setIsRejecting] = useState(false);
   const [reason, setReason] = useState('');
 
-  const handleRejectSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reason.trim()) return alert('Please provide a reason for rejection.');
-    onReject(doc.id, reason);
-    setIsRejecting(false);
+  const statusConfig = {
+    PENDING: { color: 'bg-yellow-500', text: 'text-yellow-700', label: 'Pending Review' },
+    APPROVED: { color: 'bg-emerald-500', text: 'text-emerald-700', label: 'Approved' },
+    REJECTED: { color: 'bg-red-500', text: 'text-red-700', label: 'Rejected' },
   };
 
+  const currentStatus = statusConfig[doc.status];
+
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 max-w-md w-full transition-all hover:shadow-lg">
-      {/* Header Info */}
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <span className="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">
-            {doc.docNumber}
+    <div className="group bg-white border border-gray-200 rounded-xl p-6 transition-all hover:border-gray-300 hover:shadow-sm flex flex-col justify-between">
+      <div>
+        {/* Minimalist Header */}
+        <div className="flex justify-between items-start mb-5">
+          <div className="space-y-1">
+            <p className="text-[11px] font-medium tracking-widest text-gray-400 uppercase">
+              {doc.docNumber}
+            </p>
+            <h3 className="text-base font-semibold text-gray-900 tracking-tight leading-snug">
+              {doc.subject}
+            </h3>
+          </div>
+          <div className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-100">
+            <span className={`w-1.5 h-1.5 rounded-full ${currentStatus.color}`}></span>
+            <span className={`text-[10px] font-medium uppercase tracking-wider ${currentStatus.text}`}>
+              {currentStatus.label}
+            </span>
+          </div>
+        </div>
+
+        {/* Crisp Financials */}
+        <div className="flex items-end gap-2 mb-6">
+          <span className="text-2xl font-light text-gray-900 tracking-tight">
+            ${doc.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </span>
-          <h3 className="text-lg font-bold text-gray-800 mt-2">{doc.subject}</h3>
+          <span className="text-xs text-gray-400 mb-1.5">USD</span>
         </div>
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-          doc.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-          doc.status === 'REJECTED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
-        }`}>
-          {doc.status}
-        </span>
+
+        <div className="flex justify-between text-xs text-gray-500 mb-4 border-t border-gray-50 pt-4">
+          <p>Created: <span className="text-gray-900">{new Date(doc.createdAt).toLocaleDateString()}</span></p>
+          <p>Due: <span className="text-gray-900">{new Date(doc.deadline).toLocaleDateString()}</span></p>
+        </div>
+
+        {doc.status === 'REJECTED' && doc.rejectReason && (
+          <div className="mb-4 text-xs text-red-600 bg-red-50/50 border border-red-100 p-3 rounded-md leading-relaxed">
+            <span className="font-semibold block mb-0.5">Rejection Note:</span>
+            {doc.rejectReason}
+          </div>
+        )}
       </div>
 
-      {/* Financials & Dates */}
-      <div className="grid grid-cols-2 gap-4 my-4 text-sm">
-        <div>
-          <p className="text-gray-500">Amount</p>
-          <p className="text-base font-semibold text-gray-900">${doc.amount.toLocaleString()}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Deadline</p>
-          <p className="text-base font-semibold text-gray-900">{new Date(doc.deadline).toLocaleDateString()}</p>
-        </div>
-      </div>
-
-      <div className="text-xs text-gray-400 border-t pt-3 flex justify-between">
-        <span>Created: {new Date(doc.createdAt).toLocaleDateString()}</span>
-      </div>
-
-      {/* Display Rejection Reason if applicable */}
-      {doc.status === 'REJECTED' && doc.rejectReason && (
-        <div className="mt-3 p-3 bg-red-50 rounded-lg text-sm text-red-700">
-          <strong>Reason:</strong> {doc.rejectReason}
-        </div>
-      )}
-
-      {/* Approver Actions Workflow */}
+      {/* Sleek Action Buttons */}
       {userRole === 'APPROVER' && doc.status === 'PENDING' && (
-        <div className="mt-4 pt-4 border-t border-gray-100 flex gap-2">
+        <div className="pt-2">
           {!isRejecting ? (
-            <>
+            <div className="flex gap-2">
               <button
                 onClick={() => onApprove(doc.id)}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition-colors"
+                className="flex-1 bg-black text-white hover:bg-gray-800 text-xs font-medium py-2 rounded-md transition-colors"
               >
                 Approve
               </button>
               <button
                 onClick={() => setIsRejecting(true)}
-                className="flex-1 bg-white hover:bg-gray-50 text-red-600 border border-red-200 font-medium py-2 px-4 rounded-lg text-sm transition-colors"
+                className="flex-1 bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 text-xs font-medium py-2 rounded-md transition-colors"
               >
                 Reject
               </button>
-            </>
+            </div>
           ) : (
-            <form onSubmit={handleRejectSubmit} className="w-full space-y-2">
-              <textarea
+            <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <input
+                type="text"
+                autoFocus
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="Enter rejection reason..."
-                className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-                rows={2}
+                placeholder="Brief reason for rejection..."
+                className="w-full text-xs px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-gray-400 transition-colors bg-gray-50"
               />
               <div className="flex gap-2">
                 <button
-                  type="submit"
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1.5 px-3 rounded"
+                  onClick={() => onReject(doc.id, reason)}
+                  disabled={!reason.trim()}
+                  className="flex-1 bg-red-600 text-white hover:bg-red-700 text-xs font-medium py-2 rounded-md transition-colors disabled:opacity-50"
                 >
                   Confirm Reject
                 </button>
                 <button
-                  type="button"
                   onClick={() => setIsRejecting(false)}
-                  className="bg-gray-200 text-gray-700 text-xs font-medium py-1.5 px-3 rounded"
+                  className="flex-1 text-gray-500 hover:text-gray-700 text-xs font-medium py-2 rounded-md transition-colors"
                 >
                   Cancel
                 </button>
               </div>
-            </form>
+            </div>
           )}
         </div>
       )}
