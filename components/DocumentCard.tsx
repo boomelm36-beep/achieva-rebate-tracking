@@ -40,6 +40,22 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
   };
   const currentStatus = statusConfig[doc.status];
 
+  // --- UTILITY: Format Date to DD/MM/YYYY ---
+  const formatDate = (dateString: string) => {
+    const d = new Date(dateString);
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+  };
+
+  // --- UTILITY: Calculate Days Since Creation ---
+  const getDaysActive = (createdAt: string) => {
+    const start = new Date(createdAt).getTime();
+    const now = new Date().getTime();
+    const diffInDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    
+    if (diffInDays === 0) return "Created Today";
+    return `${diffInDays} Day${diffInDays > 1 ? 's' : ''}`;
+  };
+
   const handleProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -80,13 +96,17 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
         <div className="bg-gray-50 rounded-lg p-2.5 mb-4 border border-gray-100 flex flex-col gap-1.5">
           <div className="flex justify-between text-[10px] text-gray-500">
             <span>Deadline:</span>
-            <span className="font-medium text-gray-900">{new Date(doc.deadline).toLocaleDateString()}</span>
+            <span className="font-medium text-gray-900">{formatDate(doc.deadline)}</span>
           </div>
           <div className="flex justify-between text-[10px] text-gray-500">
             <span>Last Edited:</span>
             <span className="font-medium text-gray-900">
-              {new Date(doc.updatedAt).toLocaleDateString()} {new Date(doc.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {formatDate(doc.updatedAt)} {new Date(doc.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
+          </div>
+          <div className="flex justify-between text-[10px] text-gray-500 border-t border-gray-200 pt-1.5 mt-0.5">
+            <span>Days Active:</span>
+            <span className="font-semibold text-gray-900">{getDaysActive(doc.createdAt)}</span>
           </div>
         </div>
 
