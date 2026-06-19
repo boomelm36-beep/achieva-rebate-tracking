@@ -19,24 +19,31 @@ export async function GET() {
   }
 }
 
+/ Replace the POST function inside app/api/documents/route.ts
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { subject, docNumber, amount, deadline, fileName, fileData } = await request.json();
+    const { customerName, subject, docNumber, amount, fileName, fileData } = await request.json();
 
-    if (!subject || !docNumber || !amount || !deadline) {
+    if (!customerName || !subject || !docNumber || !amount) {
       return NextResponse.json({ error: "Core fields are required" }, { status: 400 });
     }
 
+    // Auto-calculate deadline: Current date + 30 days
+    const autoDeadline = new Date();
+    autoDeadline.setDate(autoDeadline.getDate() + 30);
+
     const newDocument = await prisma.document.create({
       data: {
+        customerName,
         subject,
         docNumber,
         amount: parseFloat(amount),
-        deadline: new Date(deadline),
-        status: "REQUEST", // Always starts in the REQUEST stage
+        deadline: autoDeadline, // <-- Auto inserted here
+        status: "REQUEST",
         fileName,
         fileData,
         userId: session.user.id,

@@ -32,6 +32,7 @@ model User {
 
 model Document {
   id            String    @id @default(cuid())
+  customerName  String    // <-- Added for customer tracking
   subject       String
   docNumber     String    @unique
   amount        Float
@@ -39,9 +40,10 @@ model Document {
   rejectReason  String?
   fileName      String?   
   fileData      String?   
-  proofFileName String?   // <-- Added to store proof name
-  proofFileData String?   // <-- Added to store proof file content
+  proofFileName String?   
+  proofFileData String?   
   createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt // <-- Automatically updates on any change
   deadline      DateTime
   userId        String
   user          User      @relation(fields: [userId], references: [id])

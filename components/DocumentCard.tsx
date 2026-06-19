@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 
 export interface RebateDocument {
   id: string;
+  customerName: string;
   subject: string;
   docNumber: string;
   amount: number;
   status: 'REQUEST' | 'CHECKING' | 'APPROVED' | 'PAID';
   createdAt: string;
+  updatedAt: string;
   deadline: string;
   rejectReason?: string;
   fileName?: string;
@@ -19,20 +21,19 @@ export interface RebateDocument {
 interface DocumentCardProps {
   doc: RebateDocument;
   userRole: string;
-  onUpdateStatus: (id: string, status: string, extraData?: any) => void;
+  onUpdateStatus: (id: string, status: string, extraData?: Record<string, string>) => void;
 }
 
 export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpdateStatus }) => {
   const [isRejecting, setIsRejecting] = useState(false);
   const [reason, setReason] = useState('');
   
-  // States for uploading proof of payment
   const [isPaying, setIsPaying] = useState(false);
   const [proofFileName, setProofFileName] = useState("");
   const [proofFileData, setProofFileData] = useState("");
 
   const statusConfig = {
-    REQUEST: { color: 'bg-gray-500', text: 'text-gray-700', label: 'Draft / Requested' },
+    REQUEST: { color: 'bg-gray-500', text: 'text-gray-700', label: 'Requested' },
     CHECKING: { color: 'bg-yellow-500', text: 'text-yellow-700', label: 'Checking' },
     APPROVED: { color: 'bg-blue-500', text: 'text-blue-700', label: 'Approved' },
     PAID: { color: 'bg-emerald-500', text: 'text-emerald-700', label: 'Paid' },
@@ -59,12 +60,13 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col justify-between">
       <div>
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex justify-between items-start mb-3">
           <div className="space-y-1">
             <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">{doc.docNumber}</p>
-            <h3 className="text-sm font-semibold text-gray-900 leading-snug">{doc.subject}</h3>
+            <h3 className="text-sm font-semibold text-gray-900 leading-snug">{doc.customerName}</h3>
+            <p className="text-xs text-gray-500">{doc.subject}</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+          <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100 shrink-0">
             <span className={`w-1.5 h-1.5 rounded-full ${currentStatus.color}`}></span>
             <span className={`text-[9px] font-bold uppercase tracking-wider ${currentStatus.text}`}>{currentStatus.label}</span>
           </div>
@@ -74,15 +76,27 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
           <span className="text-xl font-light text-gray-900">${doc.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
         </div>
 
-        {/* Initial Request Attachment */}
+        {/* Date Tracking Display */}
+        <div className="bg-gray-50 rounded-lg p-2.5 mb-4 border border-gray-100 flex flex-col gap-1.5">
+          <div className="flex justify-between text-[10px] text-gray-500">
+            <span>Deadline:</span>
+            <span className="font-medium text-gray-900">{new Date(doc.deadline).toLocaleDateString()}</span>
+          </div>
+          <div className="flex justify-between text-[10px] text-gray-500">
+            <span>Last Edited:</span>
+            <span className="font-medium text-gray-900">
+              {new Date(doc.updatedAt).toLocaleDateString()} {new Date(doc.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        </div>
+
         {doc.fileData && doc.fileName && (
           <a href={doc.fileData} download={doc.fileName} className="inline-flex items-center gap-2 mb-2 text-xs font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-md transition-colors border border-gray-200 w-full">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-            Req Doc: {doc.fileName}
+            Req: {doc.fileName}
           </a>
         )}
 
-        {/* Proof of Payment Attachment */}
         {doc.proofFileData && doc.proofFileName && (
           <a href={doc.proofFileData} download={doc.proofFileName} className="inline-flex items-center gap-2 mb-4 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-md transition-colors border border-emerald-100 w-full">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -99,14 +113,12 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
       </div>
 
       <div className="pt-4 border-t border-gray-50 mt-2">
-        {/* REQUESTER: Send to Checking */}
         {userRole === 'REQUESTER' && doc.status === 'REQUEST' && (
           <button onClick={() => onUpdateStatus(doc.id, 'CHECKING')} className="w-full bg-black text-white hover:bg-gray-800 text-xs font-medium py-2 rounded-md transition-colors">
             Submit for Check
           </button>
         )}
 
-        {/* APPROVER: Checking Phase */}
         {userRole === 'APPROVER' && doc.status === 'CHECKING' && (
           !isRejecting ? (
             <div className="flex gap-2">
@@ -130,7 +142,6 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
           )
         )}
 
-        {/* APPROVER: Paid Phase */}
         {userRole === 'APPROVER' && doc.status === 'APPROVED' && (
           !isPaying ? (
              <button onClick={() => setIsPaying(true)} className="w-full bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-medium py-2 rounded-md transition-colors">

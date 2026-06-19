@@ -130,6 +130,7 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.DocumentScalarFieldEnum = {
   id: 'id',
+  customerName: 'customerName',
   subject: 'subject',
   docNumber: 'docNumber',
   amount: 'amount',
@@ -140,6 +141,7 @@ exports.Prisma.DocumentScalarFieldEnum = {
   proofFileName: 'proofFileName',
   proofFileData: 'proofFileData',
   createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   deadline: 'deadline',
   userId: 'userId'
 };

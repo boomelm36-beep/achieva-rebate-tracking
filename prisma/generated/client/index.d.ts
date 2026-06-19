@@ -2115,6 +2115,7 @@ export namespace Prisma {
 
   export type DocumentMinAggregateOutputType = {
     id: string | null
+    customerName: string | null
     subject: string | null
     docNumber: string | null
     amount: number | null
@@ -2125,12 +2126,14 @@ export namespace Prisma {
     proofFileName: string | null
     proofFileData: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     deadline: Date | null
     userId: string | null
   }
 
   export type DocumentMaxAggregateOutputType = {
     id: string | null
+    customerName: string | null
     subject: string | null
     docNumber: string | null
     amount: number | null
@@ -2141,12 +2144,14 @@ export namespace Prisma {
     proofFileName: string | null
     proofFileData: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     deadline: Date | null
     userId: string | null
   }
 
   export type DocumentCountAggregateOutputType = {
     id: number
+    customerName: number
     subject: number
     docNumber: number
     amount: number
@@ -2157,6 +2162,7 @@ export namespace Prisma {
     proofFileName: number
     proofFileData: number
     createdAt: number
+    updatedAt: number
     deadline: number
     userId: number
     _all: number
@@ -2173,6 +2179,7 @@ export namespace Prisma {
 
   export type DocumentMinAggregateInputType = {
     id?: true
+    customerName?: true
     subject?: true
     docNumber?: true
     amount?: true
@@ -2183,12 +2190,14 @@ export namespace Prisma {
     proofFileName?: true
     proofFileData?: true
     createdAt?: true
+    updatedAt?: true
     deadline?: true
     userId?: true
   }
 
   export type DocumentMaxAggregateInputType = {
     id?: true
+    customerName?: true
     subject?: true
     docNumber?: true
     amount?: true
@@ -2199,12 +2208,14 @@ export namespace Prisma {
     proofFileName?: true
     proofFileData?: true
     createdAt?: true
+    updatedAt?: true
     deadline?: true
     userId?: true
   }
 
   export type DocumentCountAggregateInputType = {
     id?: true
+    customerName?: true
     subject?: true
     docNumber?: true
     amount?: true
@@ -2215,6 +2226,7 @@ export namespace Prisma {
     proofFileName?: true
     proofFileData?: true
     createdAt?: true
+    updatedAt?: true
     deadline?: true
     userId?: true
     _all?: true
@@ -2308,6 +2320,7 @@ export namespace Prisma {
 
   export type DocumentGroupByOutputType = {
     id: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -2318,6 +2331,7 @@ export namespace Prisma {
     proofFileName: string | null
     proofFileData: string | null
     createdAt: Date
+    updatedAt: Date
     deadline: Date
     userId: string
     _count: DocumentCountAggregateOutputType | null
@@ -2343,6 +2357,7 @@ export namespace Prisma {
 
   export type DocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    customerName?: boolean
     subject?: boolean
     docNumber?: boolean
     amount?: boolean
@@ -2353,6 +2368,7 @@ export namespace Prisma {
     proofFileName?: boolean
     proofFileData?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     deadline?: boolean
     userId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2360,6 +2376,7 @@ export namespace Prisma {
 
   export type DocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    customerName?: boolean
     subject?: boolean
     docNumber?: boolean
     amount?: boolean
@@ -2370,6 +2387,7 @@ export namespace Prisma {
     proofFileName?: boolean
     proofFileData?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     deadline?: boolean
     userId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2377,6 +2395,7 @@ export namespace Prisma {
 
   export type DocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    customerName?: boolean
     subject?: boolean
     docNumber?: boolean
     amount?: boolean
@@ -2387,6 +2406,7 @@ export namespace Prisma {
     proofFileName?: boolean
     proofFileData?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     deadline?: boolean
     userId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2394,6 +2414,7 @@ export namespace Prisma {
 
   export type DocumentSelectScalar = {
     id?: boolean
+    customerName?: boolean
     subject?: boolean
     docNumber?: boolean
     amount?: boolean
@@ -2404,11 +2425,12 @@ export namespace Prisma {
     proofFileName?: boolean
     proofFileData?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     deadline?: boolean
     userId?: boolean
   }
 
-  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "fileName" | "fileData" | "proofFileName" | "proofFileData" | "createdAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerName" | "subject" | "docNumber" | "amount" | "status" | "rejectReason" | "fileName" | "fileData" | "proofFileName" | "proofFileData" | "createdAt" | "updatedAt" | "deadline" | "userId", ExtArgs["result"]["document"]>
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2426,6 +2448,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      customerName: string
       subject: string
       docNumber: string
       amount: number
@@ -2436,6 +2459,7 @@ export namespace Prisma {
       proofFileName: string | null
       proofFileData: string | null
       createdAt: Date
+      updatedAt: Date
       deadline: Date
       userId: string
     }, ExtArgs["result"]["document"]>
@@ -2863,6 +2887,7 @@ export namespace Prisma {
    */
   interface DocumentFieldRefs {
     readonly id: FieldRef<"Document", 'String'>
+    readonly customerName: FieldRef<"Document", 'String'>
     readonly subject: FieldRef<"Document", 'String'>
     readonly docNumber: FieldRef<"Document", 'String'>
     readonly amount: FieldRef<"Document", 'Float'>
@@ -2873,6 +2898,7 @@ export namespace Prisma {
     readonly proofFileName: FieldRef<"Document", 'String'>
     readonly proofFileData: FieldRef<"Document", 'String'>
     readonly createdAt: FieldRef<"Document", 'DateTime'>
+    readonly updatedAt: FieldRef<"Document", 'DateTime'>
     readonly deadline: FieldRef<"Document", 'DateTime'>
     readonly userId: FieldRef<"Document", 'String'>
   }
@@ -3321,6 +3347,7 @@ export namespace Prisma {
 
   export const DocumentScalarFieldEnum: {
     id: 'id',
+    customerName: 'customerName',
     subject: 'subject',
     docNumber: 'docNumber',
     amount: 'amount',
@@ -3331,6 +3358,7 @@ export namespace Prisma {
     proofFileName: 'proofFileName',
     proofFileData: 'proofFileData',
     createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     deadline: 'deadline',
     userId: 'userId'
   };
@@ -3514,6 +3542,7 @@ export namespace Prisma {
     OR?: DocumentWhereInput[]
     NOT?: DocumentWhereInput | DocumentWhereInput[]
     id?: StringFilter<"Document"> | string
+    customerName?: StringFilter<"Document"> | string
     subject?: StringFilter<"Document"> | string
     docNumber?: StringFilter<"Document"> | string
     amount?: FloatFilter<"Document"> | number
@@ -3524,6 +3553,7 @@ export namespace Prisma {
     proofFileName?: StringNullableFilter<"Document"> | string | null
     proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3531,6 +3561,7 @@ export namespace Prisma {
 
   export type DocumentOrderByWithRelationInput = {
     id?: SortOrder
+    customerName?: SortOrder
     subject?: SortOrder
     docNumber?: SortOrder
     amount?: SortOrder
@@ -3541,6 +3572,7 @@ export namespace Prisma {
     proofFileName?: SortOrderInput | SortOrder
     proofFileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -3552,6 +3584,7 @@ export namespace Prisma {
     AND?: DocumentWhereInput | DocumentWhereInput[]
     OR?: DocumentWhereInput[]
     NOT?: DocumentWhereInput | DocumentWhereInput[]
+    customerName?: StringFilter<"Document"> | string
     subject?: StringFilter<"Document"> | string
     amount?: FloatFilter<"Document"> | number
     status?: EnumDocStatusFilter<"Document"> | $Enums.DocStatus
@@ -3561,6 +3594,7 @@ export namespace Prisma {
     proofFileName?: StringNullableFilter<"Document"> | string | null
     proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3568,6 +3602,7 @@ export namespace Prisma {
 
   export type DocumentOrderByWithAggregationInput = {
     id?: SortOrder
+    customerName?: SortOrder
     subject?: SortOrder
     docNumber?: SortOrder
     amount?: SortOrder
@@ -3578,6 +3613,7 @@ export namespace Prisma {
     proofFileName?: SortOrderInput | SortOrder
     proofFileData?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
     _count?: DocumentCountOrderByAggregateInput
@@ -3592,6 +3628,7 @@ export namespace Prisma {
     OR?: DocumentScalarWhereWithAggregatesInput[]
     NOT?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Document"> | string
+    customerName?: StringWithAggregatesFilter<"Document"> | string
     subject?: StringWithAggregatesFilter<"Document"> | string
     docNumber?: StringWithAggregatesFilter<"Document"> | string
     amount?: FloatWithAggregatesFilter<"Document"> | number
@@ -3602,6 +3639,7 @@ export namespace Prisma {
     proofFileName?: StringNullableWithAggregatesFilter<"Document"> | string | null
     proofFileData?: StringNullableWithAggregatesFilter<"Document"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     deadline?: DateTimeWithAggregatesFilter<"Document"> | Date | string
     userId?: StringWithAggregatesFilter<"Document"> | string
   }
@@ -3668,6 +3706,7 @@ export namespace Prisma {
 
   export type DocumentCreateInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -3678,12 +3717,14 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
     user: UserCreateNestedOneWithoutDocumentsInput
   }
 
   export type DocumentUncheckedCreateInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -3694,12 +3735,14 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
     userId: string
   }
 
   export type DocumentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -3710,12 +3753,14 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -3726,12 +3771,14 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type DocumentCreateManyInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -3742,12 +3789,14 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
     userId: string
   }
 
   export type DocumentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -3758,11 +3807,13 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -3773,6 +3824,7 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
   }
@@ -3935,6 +3987,7 @@ export namespace Prisma {
 
   export type DocumentCountOrderByAggregateInput = {
     id?: SortOrder
+    customerName?: SortOrder
     subject?: SortOrder
     docNumber?: SortOrder
     amount?: SortOrder
@@ -3945,6 +3998,7 @@ export namespace Prisma {
     proofFileName?: SortOrder
     proofFileData?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
   }
@@ -3955,6 +4009,7 @@ export namespace Prisma {
 
   export type DocumentMaxOrderByAggregateInput = {
     id?: SortOrder
+    customerName?: SortOrder
     subject?: SortOrder
     docNumber?: SortOrder
     amount?: SortOrder
@@ -3965,12 +4020,14 @@ export namespace Prisma {
     proofFileName?: SortOrder
     proofFileData?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
   }
 
   export type DocumentMinOrderByAggregateInput = {
     id?: SortOrder
+    customerName?: SortOrder
     subject?: SortOrder
     docNumber?: SortOrder
     amount?: SortOrder
@@ -3981,6 +4038,7 @@ export namespace Prisma {
     proofFileName?: SortOrder
     proofFileData?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     deadline?: SortOrder
     userId?: SortOrder
   }
@@ -4285,6 +4343,7 @@ export namespace Prisma {
 
   export type DocumentCreateWithoutUserInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -4295,11 +4354,13 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
   }
 
   export type DocumentUncheckedCreateWithoutUserInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -4310,6 +4371,7 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
   }
 
@@ -4344,6 +4406,7 @@ export namespace Prisma {
     OR?: DocumentScalarWhereInput[]
     NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
     id?: StringFilter<"Document"> | string
+    customerName?: StringFilter<"Document"> | string
     subject?: StringFilter<"Document"> | string
     docNumber?: StringFilter<"Document"> | string
     amount?: FloatFilter<"Document"> | number
@@ -4354,6 +4417,7 @@ export namespace Prisma {
     proofFileName?: StringNullableFilter<"Document"> | string | null
     proofFileData?: StringNullableFilter<"Document"> | string | null
     createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
     deadline?: DateTimeFilter<"Document"> | Date | string
     userId?: StringFilter<"Document"> | string
   }
@@ -4408,6 +4472,7 @@ export namespace Prisma {
 
   export type DocumentCreateManyUserInput = {
     id?: string
+    customerName: string
     subject: string
     docNumber: string
     amount: number
@@ -4418,11 +4483,13 @@ export namespace Prisma {
     proofFileName?: string | null
     proofFileData?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     deadline: Date | string
   }
 
   export type DocumentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -4433,11 +4500,13 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -4448,11 +4517,13 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    customerName?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     docNumber?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -4463,6 +4534,7 @@ export namespace Prisma {
     proofFileName?: NullableStringFieldUpdateOperationsInput | string | null
     proofFileData?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadline?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
