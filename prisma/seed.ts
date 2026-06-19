@@ -35,19 +35,19 @@ async function main() {
   await prisma.document.createMany({
     data: [
       {
+        customerName: "Acme Corp", // <-- Added this required field
         subject: "Q1 Global Supply Rebate",
         docNumber: "REB-2026-001",
         amount: 14200.00,
-        // CHANGED: From PENDING to REQUEST
         status: DocStatus.REQUEST,
         deadline: new Date("2026-08-01"),
         userId: requester.id,
       },
       {
+        customerName: "TechFlow Industries", // <-- Added this required field
         subject: "Marketing MDF Reimbursement",
         docNumber: "REB-2026-002",
         amount: 3500.50,
-        // CHANGED: From PENDING to REQUEST
         status: DocStatus.REQUEST,
         deadline: new Date("2026-07-15"),
         userId: requester.id,
