@@ -20,9 +20,10 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   
   providers: [
-    GoogleProvider({
+   GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
+      allowDangerousEmailAccountLinking: true, // <-- Add this line!
     }),
 
     CredentialsProvider({
