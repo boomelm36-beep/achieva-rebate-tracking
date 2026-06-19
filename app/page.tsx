@@ -294,7 +294,8 @@ export default function Home() {
                       doc={doc} 
                       userRole={userRole} 
                       onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument}          
+                      onEdit={handleEditDocument} 
+                      onDelete={handleDeleteDocument}              
                     />
                   ))}
                 </div>
@@ -316,8 +317,8 @@ export default function Home() {
                       doc={doc} 
                       userRole={userRole} 
                       onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument}          {/* Add this line */}
-                      onDelete={handleDeleteDocument}      {/* Add this line */}
+                      onEdit={handleEditDocument}         
+                      onDelete={handleDeleteDocument}     
                     />
                   ))}
                 </div>
