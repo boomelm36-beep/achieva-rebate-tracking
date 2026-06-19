@@ -19,7 +19,7 @@ export async function GET() {
   }
 }
 
-/ Replace the POST function inside app/api/documents/route.ts
+// Replace the POST function inside app/api/documents/route.ts
 
 export async function POST(request: Request) {
   try {
