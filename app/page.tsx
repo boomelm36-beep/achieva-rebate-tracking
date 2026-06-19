@@ -126,7 +126,10 @@ export default function Home() {
                 + New Document
               </button>
             )}
-            <button onClick={() => signOut()} className="bg-white border border-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-colors">
+            <button
+              onClick={() => signOut({ callbackUrl: '/', redirect: true })}
+              className="bg-white border border-gray-200 text-gray-700 text-sm font-medium py-2 px-4 rounded-md hover:bg-gray-50 transition-colors"
+            >
               Log out
             </button>
           </div>
