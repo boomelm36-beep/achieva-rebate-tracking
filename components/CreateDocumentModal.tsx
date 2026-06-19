@@ -74,7 +74,7 @@ export default function CreateDocumentModal({ isOpen, onClose, onSuccess }: Crea
               <input type="text" required value={docNumber} onChange={(e) => setDocNumber(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-gray-900" placeholder="REB-123" />
             </div>
             <div>
-              <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Amount ($)</label>
+              <label className="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Amount (฿)</label>
               <input type="number" step="0.01" required value={amount} onChange={(e) => setAmount(e.target.value)} className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-gray-900" placeholder="0.00" />
             </div>
           </div>

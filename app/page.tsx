@@ -123,7 +123,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
         <div className="max-w-[320px] w-full">
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-2">Rebate Tracker</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-2">Achieva Rebate Tracker</h1>
             <p className="text-sm text-gray-500">
               {isLoginView ? "Enter your details to sign in." : "Create an account to continue."}
             </p>
@@ -221,12 +221,15 @@ export default function Home() {
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         
-        {/* Dashboard Header */}
+       {/* Dashboard Header */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-100">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Rebate Workflow</h1>
+            {/* --- UPDATED: Personalized Welcome Message --- */}
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+              Welcome, {session?.user?.name || session?.user?.email?.split('@')[0]} 👋
+            </h1>
             <p className="text-sm text-gray-500 mt-1">
-              {session?.user?.email} <span className="mx-1 text-gray-300">•</span> <span className="uppercase text-[10px] tracking-widest font-semibold text-gray-400">{userRole}</span>
+              Rebate Workflow <span className="mx-1 text-gray-300">•</span> {session?.user?.email} <span className="mx-1 text-gray-300">•</span> <span className="uppercase text-[10px] tracking-widest font-semibold text-gray-400">{userRole}</span>
             </p>
           </div>
           <div className="flex gap-3">
