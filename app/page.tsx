@@ -12,6 +12,7 @@ export default function Home() {
   const [documents, setDocuments] = useState<RebateDocument[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<RebateDocument | null>(null);
 
   // Authentication UI State
   const [isLoginView, setIsLoginView] = useState(true);
@@ -107,6 +108,20 @@ export default function Home() {
       fetchDocuments();
     }
   };
+
+  const handleDeleteDocument = async (id: string) => {
+    const res = await fetch("/api/documents", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) fetchDocuments();
+  };
+
+  const handleEditDocument = (doc: RebateDocument) => {
+    setEditingDoc(doc);
+    setIsModalOpen(true);
+  };  
 
   // --- RENDER: LOADING ---
   if (status === "loading") {
@@ -208,6 +223,8 @@ export default function Home() {
     );
   }
 
+  
+
   // --- MINIMALIST KANBAN DASHBOARD ---
   const userRole = session?.user?.role || "REQUESTER";
 
@@ -235,7 +252,7 @@ export default function Home() {
           <div className="flex gap-3">
             {userRole === "REQUESTER" && (
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => { setEditingDoc(null); setIsModalOpen(true); }}
                 className="bg-black text-white text-sm font-medium py-2 px-4 rounded-md hover:bg-gray-800 transition-colors"
               >
                 + New Document
@@ -277,6 +294,8 @@ export default function Home() {
                       doc={doc} 
                       userRole={userRole} 
                       onUpdateStatus={handleUpdateStatus} 
+                      onEdit={handleEditDocument}          {/* Add this line */}
+                      onDelete={handleDeleteDocument}      {/* Add this line */}
                     />
                   ))}
                 </div>
@@ -349,8 +368,9 @@ export default function Home() {
 
         <CreateDocumentModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => { setIsModalOpen(false); setEditingDoc(null); }}
           onSuccess={fetchDocuments}
+          editData={editingDoc}
         />
       </div>
     </div>

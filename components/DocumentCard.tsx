@@ -22,12 +22,13 @@ interface DocumentCardProps {
   doc: RebateDocument;
   userRole: string;
   onUpdateStatus: (id: string, status: string, extraData?: Record<string, string>) => void;
+  onEdit: (doc: RebateDocument) => void;
+  onDelete: (id: string) => void;
 }
 
-export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpdateStatus }) => {
+export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpdateStatus, onEdit, onDelete }) => {
   const [isRejecting, setIsRejecting] = useState(false);
   const [reason, setReason] = useState('');
-  
   const [isPaying, setIsPaying] = useState(false);
   const [proofFileName, setProofFileName] = useState("");
   const [proofFileData, setProofFileData] = useState("");
@@ -40,20 +41,14 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
   };
   const currentStatus = statusConfig[doc.status];
 
-  // --- UTILITY: Format Date to DD/MM/YYYY ---
   const formatDate = (dateString: string) => {
     const d = new Date(dateString);
     return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
   };
 
-  // --- UTILITY: Calculate Days Since Creation ---
   const getDaysActive = (createdAt: string) => {
-    const start = new Date(createdAt).getTime();
-    const now = new Date().getTime();
-    const diffInDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    
-    if (diffInDays === 0) return "Created Today";
-    return `${diffInDays} Day${diffInDays > 1 ? 's' : ''}`;
+    const diffInDays = Math.floor((new Date().getTime() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24));
+    return diffInDays === 0 ? "Created Today" : `${diffInDays} Day${diffInDays > 1 ? 's' : ''}`;
   };
 
   const handleProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,31 +63,51 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
   };
 
   const submitPayment = () => {
-    if (!proofFileData) return alert("Please upload proof of payment.");
+    if (!proofFileData) return alert("Please upload proof.");
     onUpdateStatus(doc.id, 'PAID', { proofFileName, proofFileData });
     setIsPaying(false);
   };
 
+  // Logic for who can edit or delete
+  const canEdit = userRole === 'REQUESTER' && doc.status === 'REQUEST';
+  const canDelete = userRole === 'APPROVER' || (userRole === 'REQUESTER' && doc.status === 'REQUEST');
+
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col justify-between">
+    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col justify-between group relative">
+      
+      {/* Edit & Delete Action Icons (Hidden until hover) */}
+      <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        {canEdit && (
+          <button onClick={() => onEdit(doc)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors" title="Edit">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+          </button>
+        )}
+        {canDelete && (
+          <button onClick={() => { if(window.confirm("Delete this document forever?")) onDelete(doc.id); }} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Delete">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
+        )}
+      </div>
+
       <div>
-        <div className="flex justify-between items-start mb-3">
+        <div className="flex justify-between items-start mb-3 pr-16">
           <div className="space-y-1">
             <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">{doc.docNumber}</p>
             <h3 className="text-sm font-semibold text-gray-900 leading-snug">{doc.customerName}</h3>
             <p className="text-xs text-gray-500">{doc.subject}</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-md border border-gray-100 shrink-0">
+        </div>
+
+        {/* ... Rest of your existing card code below (Status Badge, Amount, Dates, Links, Actions) ... */}
+        <div className="flex items-center gap-1.5 mb-4">
             <span className={`w-1.5 h-1.5 rounded-full ${currentStatus.color}`}></span>
             <span className={`text-[9px] font-bold uppercase tracking-wider ${currentStatus.text}`}>{currentStatus.label}</span>
-          </div>
         </div>
 
         <div className="flex items-end gap-1 mb-4">
-          <span className="text-xl font-light text-gray-900">฿{doc.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          <span className="text-xl font-light text-gray-900">${doc.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
         </div>
 
-        {/* Date Tracking Display */}
         <div className="bg-gray-50 rounded-lg p-2.5 mb-4 border border-gray-100 flex flex-col gap-1.5">
           <div className="flex justify-between text-[10px] text-gray-500">
             <span>Deadline:</span>
@@ -100,9 +115,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
           </div>
           <div className="flex justify-between text-[10px] text-gray-500">
             <span>Last Edited:</span>
-            <span className="font-medium text-gray-900">
-              {formatDate(doc.updatedAt)} {new Date(doc.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
+            <span className="font-medium text-gray-900">{formatDate(doc.updatedAt)}</span>
           </div>
           <div className="flex justify-between text-[10px] text-gray-500 border-t border-gray-200 pt-1.5 mt-0.5">
             <span>Days Active:</span>
@@ -110,6 +123,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
           </div>
         </div>
 
+        {/* (Keep File Links & Role Buttons exactly the same as your previous step) */}
         {doc.fileData && doc.fileName && (
           <a href={doc.fileData} download={doc.fileName} className="inline-flex items-center gap-2 mb-2 text-xs font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-md transition-colors border border-gray-200 w-full">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>

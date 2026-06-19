@@ -57,34 +57,39 @@ export async function POST(request: Request) {
   }
 }
 
+// --- Replace PATCH and add DELETE in app/api/documents/route.ts ---
+
 export async function PATCH(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id, status, rejectReason, proofFileName, proofFileData } = await request.json();
+    const body = await request.json();
+    const { id, status, rejectReason, proofFileName, proofFileData, customerName, subject, docNumber, amount } = body;
 
-    // Validation: Rejections need a reason
-    if (status === "REQUEST" && (!rejectReason || rejectReason.trim() === "")) {
-      return NextResponse.json({ error: "A reason is required to reject" }, { status: 400 });
+    const dataToUpdate: any = {};
+
+    // 1. Handle Status Workflow Updates
+    if (status) {
+      if (status === "REQUEST" && (!rejectReason || rejectReason.trim() === "")) {
+        return NextResponse.json({ error: "A reason is required to reject" }, { status: 400 });
+      }
+      if (status === "PAID" && (!proofFileName || !proofFileData)) {
+        return NextResponse.json({ error: "Proof of payment file is required" }, { status: 400 });
+      }
+      dataToUpdate.status = status;
+      dataToUpdate.rejectReason = status === "REQUEST" ? rejectReason : null;
+      if (status === "PAID") {
+        dataToUpdate.proofFileName = proofFileName;
+        dataToUpdate.proofFileData = proofFileData;
+      }
     }
 
-    // Validation: Marking as PAID needs proof of payment
-    if (status === "PAID" && (!proofFileName || !proofFileData)) {
-      return NextResponse.json({ error: "Proof of payment file is required" }, { status: 400 });
-    }
-
-    const dataToUpdate: any = { status: status as DocStatus };
-    
-    // Manage rejection reason clearing
-    if (status === "REQUEST") dataToUpdate.rejectReason = rejectReason;
-    else dataToUpdate.rejectReason = null;
-
-    // Attach proof of payment if moving to PAID
-    if (status === "PAID") {
-      dataToUpdate.proofFileName = proofFileName;
-      dataToUpdate.proofFileData = proofFileData;
-    }
+    // 2. Handle Manual Card Edits
+    if (customerName) dataToUpdate.customerName = customerName;
+    if (subject) dataToUpdate.subject = subject;
+    if (docNumber) dataToUpdate.docNumber = docNumber;
+    if (amount) dataToUpdate.amount = parseFloat(amount);
 
     const updatedDocument = await prisma.document.update({
       where: { id },
@@ -94,5 +99,22 @@ export async function PATCH(request: Request) {
     return NextResponse.json(updatedDocument, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
+}
+
+// Add this DELETE function to the bottom of the file
+export async function DELETE(request: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { id } = await request.json();
+    if (!id) return NextResponse.json({ error: "Document ID is required" }, { status: 400 });
+
+    await prisma.document.delete({ where: { id } });
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }
