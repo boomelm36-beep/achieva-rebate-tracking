@@ -2,7 +2,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter"; // V4 Adapter Import
 import { PrismaClient } from "../../../../prisma/generated/client";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -16,17 +16,15 @@ const prisma = new PrismaClient({ adapter });
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   
-  // Force JWT session strategy. This is required when using CredentialsProvider with Prisma.
+  // Force JWT session strategy required for CredentialsProvider
   session: { strategy: "jwt" },
   
   providers: [
-    // 1. Google Authentication
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
     }),
 
-    // 2. Custom Email/Password Authentication
     CredentialsProvider({
       name: "Email and Password",
       credentials: {
@@ -36,43 +34,39 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        // Find user in Neon DB
         const user = await prisma.user.findUnique({
           where: { email: credentials.email }
         });
 
-        // If no user, or user signed up with Google (no password)
         if (!user || !user.password) return null;
 
-        // Compare entered password with hashed password
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isPasswordValid) return null;
 
-        // Return user object if successful
+        // Securely cast the custom user object to satisfy the strict TS compiler
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           role: user.role,
-        } as any;
+        } as unknown as import("next-auth").User;
       }
     })
   ],
   callbacks: {
-    // Inject the custom role into the JWT token
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
+        token.role = (user as unknown as { role: string }).role;
       }
       return token;
     },
-    // Pass the role from the token into the active session
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).role = token.role;
+        const customUser = session.user as unknown as { id: string; role: string };
+        customUser.id = token.id as string;
+        customUser.role = token.role as string;
       }
       return session;
     },
