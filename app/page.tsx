@@ -94,7 +94,7 @@ export default function Home() {
     }
   };
 
-  // --- DOCUMENT WORKFLOW HANDLER ---
+  // --- DOCUMENT WORKFLOW HANDLERS ---
   const handleUpdateStatus = async (id: string, newStatus: string, extraData?: Record<string, string>) => {
     const payload: Record<string, string> = { id, status: newStatus, ...extraData };
 
@@ -121,7 +121,7 @@ export default function Home() {
   const handleEditDocument = (doc: RebateDocument) => {
     setEditingDoc(doc);
     setIsModalOpen(true);
-  };  
+  };
 
   // --- RENDER: LOADING ---
   if (status === "loading") {
@@ -138,7 +138,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
         <div className="max-w-[320px] w-full">
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-2">Achieva Rebate Tracker</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-gray-900 mb-2">Rebate Tracker</h1>
             <p className="text-sm text-gray-500">
               {isLoginView ? "Enter your details to sign in." : "Create an account to continue."}
             </p>
@@ -223,22 +223,20 @@ export default function Home() {
     );
   }
 
-  
-
   // --- MINIMALIST KANBAN DASHBOARD ---
   const userRole = session?.user?.role || "REQUESTER";
 
-// Filter documents into Kanban columns based on workflow status
+  // Filter documents into Kanban columns based on workflow status
   const requestDocs = documents.filter(doc => doc.status === "REQUEST");
   const checkingDocs = documents.filter(doc => doc.status === "CHECKING");
   const approvedDocs = documents.filter(doc => doc.status === "APPROVED");
   const paidDocs = documents.filter(doc => doc.status === "PAID");
 
-  // --- NEW: Calculate Financial Summaries ---
+  // --- Calculate Financial Summaries ---
   const totalUnpaid = [...requestDocs, ...checkingDocs, ...approvedDocs].reduce((sum, doc) => sum + doc.amount, 0);
   const totalPaid = paidDocs.reduce((sum, doc) => sum + doc.amount, 0);
 
-  // --- NEW: Thai Baht Formatter ---
+  // --- Thai Baht Formatter ---
   const formatTHB = (amount: number) => {
     return new Intl.NumberFormat('th-TH', { 
       style: 'currency', 
@@ -251,10 +249,9 @@ export default function Home() {
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="max-w-[1600px] mx-auto px-6 py-8">
         
-       {/* Dashboard Header */}
+        {/* Dashboard Header */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-100">
           <div>
-            {/* --- UPDATED: Personalized Welcome Message --- */}
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
               Welcome, {session?.user?.name || session?.user?.email?.split('@')[0]} 👋
             </h1>
@@ -280,7 +277,6 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Kanban Board Layout */}
         {/* Kanban Board & Summary Layout */}
         <main>
           {loadingDocs ? (
@@ -291,7 +287,7 @@ export default function Home() {
             </div>
           ) : (
             <>
-              {/* --- NEW: Financial Summary Section --- */}
+              {/* Financial Summary Section */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-center transition-all hover:border-gray-300 hover:shadow-sm">
                   <p className="text-[11px] font-semibold tracking-widest text-gray-400 uppercase mb-2">Total Unpaid</p>
@@ -309,98 +305,99 @@ export default function Home() {
 
               {/* Kanban Columns */}
               <div className="flex flex-col xl:flex-row gap-6 items-start overflow-x-auto pb-4">
-              
-              {/* KANBAN COLUMN 1: REQUEST */}
-              <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
-                <div className="flex items-center justify-between mb-4 px-1">
-                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">1. Request</h2>
-                  <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                    {requestDocs.length}
-                  </span>
+                
+                {/* KANBAN COLUMN 1: REQUEST */}
+                <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                  <div className="flex items-center justify-between mb-4 px-1">
+                    <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">1. Request</h2>
+                    <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                      {requestDocs.length}
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {requestDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No requests currently.</p>}
+                    {requestDocs.map((doc) => (
+                      <DocumentCard 
+                        key={doc.id} 
+                        doc={doc} 
+                        userRole={userRole} 
+                        onUpdateStatus={handleUpdateStatus}
+                        onEdit={handleEditDocument}
+                        onDelete={handleDeleteDocument}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {requestDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No requests currently.</p>}
-                  {requestDocs.map((doc) => (
-                    <DocumentCard 
-                      key={doc.id} 
-                      doc={doc} 
-                      userRole={userRole} 
-                      onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument} 
-                      onDelete={handleDeleteDocument}              
-                    />
-                  ))}
-                </div>
-              </div>
 
-              {/* KANBAN COLUMN 2: CHECK DOCUMENT */}
-              <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
-                <div className="flex items-center justify-between mb-4 px-1">
-                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">2. Checking</h2>
-                  <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
-                    {checkingDocs.length}
-                  </span>
+                {/* KANBAN COLUMN 2: CHECK DOCUMENT */}
+                <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                  <div className="flex items-center justify-between mb-4 px-1">
+                    <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">2. Checking</h2>
+                    <span className="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                      {checkingDocs.length}
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {checkingDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No documents in checking phase.</p>}
+                    {checkingDocs.map((doc) => (
+                      <DocumentCard 
+                        key={doc.id} 
+                        doc={doc} 
+                        userRole={userRole} 
+                        onUpdateStatus={handleUpdateStatus}
+                        onEdit={handleEditDocument}
+                        onDelete={handleDeleteDocument}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {checkingDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No documents in checking phase.</p>}
-                  {checkingDocs.map((doc) => (
-                    <DocumentCard 
-                      key={doc.id} 
-                      doc={doc} 
-                      userRole={userRole} 
-                      onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument}         
-                      onDelete={handleDeleteDocument}     
-                    />
-                  ))}
-                </div>
-              </div>
 
-              {/* KANBAN COLUMN 3: APPROVED */}
-              <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
-                <div className="flex items-center justify-between mb-4 px-1">
-                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">3. Approved</h2>
-                  <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded-full">
-                    {approvedDocs.length}
-                  </span>
+                {/* KANBAN COLUMN 3: APPROVED */}
+                <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">
+                  <div className="flex items-center justify-between mb-4 px-1">
+                    <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">3. Approved</h2>
+                    <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                      {approvedDocs.length}
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {approvedDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No approved documents.</p>}
+                    {approvedDocs.map((doc) => (
+                      <DocumentCard 
+                        key={doc.id} 
+                        doc={doc} 
+                        userRole={userRole} 
+                        onUpdateStatus={handleUpdateStatus}
+                        onEdit={handleEditDocument}
+                        onDelete={handleDeleteDocument}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {approvedDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No approved documents.</p>}
-                  {approvedDocs.map((doc) => (
-                    <DocumentCard 
-                      key={doc.id} 
-                      doc={doc} 
-                      userRole={userRole} 
-                      onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument}          
-                      onDelete={handleDeleteDocument}      
-                    />
-                  ))}
-                </div>
-              </div>
 
-              {/* KANBAN COLUMN 4: PAID */}
-              <div className="flex-1 min-w-[300px] w-full bg-emerald-50/30 rounded-xl p-4 border border-emerald-100 min-h-[500px]">
-                <div className="flex items-center justify-between mb-4 px-1">
-                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">4. Paid</h2>
-                  <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full">{paidDocs.length}</span>
+                {/* KANBAN COLUMN 4: PAID */}
+                <div className="flex-1 min-w-[300px] w-full bg-emerald-50/30 rounded-xl p-4 border border-emerald-100 min-h-[500px]">
+                  <div className="flex items-center justify-between mb-4 px-1">
+                    <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">4. Paid</h2>
+                    <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full">{paidDocs.length}</span>
+                  </div>
+                  <div className="space-y-4">
+                    {paidDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No paid documents yet.</p>}
+                    {paidDocs.map((doc) => (
+                      <DocumentCard 
+                        key={doc.id} 
+                        doc={doc} 
+                        userRole={userRole} 
+                        onUpdateStatus={handleUpdateStatus}
+                        onEdit={handleEditDocument}
+                        onDelete={handleDeleteDocument}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  {paidDocs.length === 0 && <p className="text-xs text-gray-400 italic px-1">No paid documents yet.</p>}
-                  {paidDocs.map((doc) => (
-                    <DocumentCard 
-                      key={doc.id} 
-                      doc={doc} 
-                      userRole={userRole} 
-                      onUpdateStatus={handleUpdateStatus} 
-                      onEdit={handleEditDocument}          
-                      onDelete={handleDeleteDocument}      
-                    />
-                  ))}
-                </div>
-              </div>
 
-            </div>
+              </div>
+            </>
           )}
         </main>
 
