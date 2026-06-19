@@ -228,11 +228,24 @@ export default function Home() {
   // --- MINIMALIST KANBAN DASHBOARD ---
   const userRole = session?.user?.role || "REQUESTER";
 
-  // Filter documents into Kanban columns based on workflow status
+// Filter documents into Kanban columns based on workflow status
   const requestDocs = documents.filter(doc => doc.status === "REQUEST");
   const checkingDocs = documents.filter(doc => doc.status === "CHECKING");
   const approvedDocs = documents.filter(doc => doc.status === "APPROVED");
   const paidDocs = documents.filter(doc => doc.status === "PAID");
+
+  // --- NEW: Calculate Financial Summaries ---
+  const totalUnpaid = [...requestDocs, ...checkingDocs, ...approvedDocs].reduce((sum, doc) => sum + doc.amount, 0);
+  const totalPaid = paidDocs.reduce((sum, doc) => sum + doc.amount, 0);
+
+  // --- NEW: Thai Baht Formatter ---
+  const formatTHB = (amount: number) => {
+    return new Intl.NumberFormat('th-TH', { 
+      style: 'currency', 
+      currency: 'THB',
+      minimumFractionDigits: 2 
+    }).format(amount);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -268,6 +281,7 @@ export default function Home() {
         </header>
 
         {/* Kanban Board Layout */}
+        {/* Kanban Board & Summary Layout */}
         <main>
           {loadingDocs ? (
             <div className="flex space-x-2 text-sm text-gray-400">
@@ -276,7 +290,25 @@ export default function Home() {
               <span className="w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce delay-150"></span>
             </div>
           ) : (
-            <div className="flex flex-col xl:flex-row gap-6 items-start overflow-x-auto pb-4">
+            <>
+              {/* --- NEW: Financial Summary Section --- */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 flex flex-col justify-center transition-all hover:border-gray-300 hover:shadow-sm">
+                  <p className="text-[11px] font-semibold tracking-widest text-gray-400 uppercase mb-2">Total Unpaid</p>
+                  <h2 className="text-3xl font-light text-gray-900 tracking-tight">
+                    {formatTHB(totalUnpaid)}
+                  </h2>
+                </div>
+                <div className="bg-white border border-emerald-100 rounded-xl p-6 flex flex-col justify-center transition-all hover:border-emerald-200 hover:shadow-sm">
+                  <p className="text-[11px] font-semibold tracking-widest text-emerald-500 uppercase mb-2">Total Paid</p>
+                  <h2 className="text-3xl font-light text-emerald-700 tracking-tight">
+                    {formatTHB(totalPaid)}
+                  </h2>
+                </div>
+              </div>
+
+              {/* Kanban Columns */}
+              <div className="flex flex-col xl:flex-row gap-6 items-start overflow-x-auto pb-4">
               
               {/* KANBAN COLUMN 1: REQUEST */}
               <div className="flex-1 min-w-[300px] w-full bg-gray-50/50 rounded-xl p-4 border border-gray-100 min-h-[500px]">

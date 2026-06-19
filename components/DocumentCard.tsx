@@ -105,7 +105,9 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({ doc, userRole, onUpd
         </div>
 
         <div className="flex items-end gap-1 mb-4">
-          <span className="text-xl font-light text-gray-900">฿{doc.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+          <span className="text-xl font-light text-gray-900">
+            {new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(doc.amount)}
+          </span>
         </div>
 
         <div className="bg-gray-50 rounded-lg p-2.5 mb-4 border border-gray-100 flex flex-col gap-1.5">
